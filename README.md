@@ -43,5 +43,9 @@ values, err := redis.Values(conn.Do("HGETALL", "album:1"))
 	}
 
 
+var album Album
+redis.ScanStruct(values, &album)
+fmt.Printf("%+v", album)
+
 
 ```

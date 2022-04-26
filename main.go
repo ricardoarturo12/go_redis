@@ -31,27 +31,16 @@ func main() {
 
 	defer conn.Close()
 
-	_, err = conn.Do("HMSET", "album:2", "title", "Electric Ladyland", "artist", "Jimi Hendrix", "price", 4.95, "likes", 8)
+	values, err := redis.Values(conn.Do("HGETALL", "album:1"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = conn.Do("HMSET", "album:3", "title", "TESTS", "artist", "Jimi Hendrix", "price", 4.95, "likes", 8)
-	if err != nil {
+	var album Album
+
+	err = redis.ScanStruct(values, &album)
+	if err != nil{
 		log.Fatal(err)
 	}
-
-	fmt.Println("added!")
-
-	price, err := redis.Float64(conn.Do("HGET", "album:1", "price"))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	likes, err := redis.Int(conn.Do("HGET", "album:1", "likes"))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("Price: %.2f [likes: %d] \n", price, likes)
+	fmt.Printf("%+v", album)
 }
