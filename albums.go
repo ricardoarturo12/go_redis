@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"log"
+	"os"
 
 	"github.com/gomodule/redigo/redis"
 )
@@ -20,19 +22,10 @@ type Album struct {
 }
 
 func FindAlbum(id string) (*Album, error) {
-	// Use the connection pool's Get() method to fetch a single Redis
-	// connection from the pool.
 	conn := pool.Get()
 
-	// Importantly, use defer and the connection's Close() method to
-	// ensure that the connection is always returned to the pool before
-	// FindAlbum() exits.
 	defer conn.Close()
 
-	// Fetch the details of a specific album. If no album is found
-	// the given id, the []interface{} slice returned by redis.Values
-	// will have a length of zero. So check for this and return an
-	// ErrNoAlbum error as necessary.
 	values, err := redis.Values(conn.Do("HGETALL", "album:"+id))
 	if err != nil {
 		return nil, err
@@ -47,4 +40,38 @@ func FindAlbum(id string) (*Album, error) {
 	}
 
 	return &album, nil
+}
+
+func SetCount() {
+	// SET album "0"
+}
+
+// Incrementa el valor
+func Increment() (interface{}, error) {
+	conn, err := redis.Dial("tcp", "localhost:8080",
+		redis.DialPassword(os.Getenv("PASSWORD")))
+
+	value, err1 := conn.Do("INCR", "album")
+	if err1 != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	return value, nil
+}
+
+func SetAlbums(id, title, artist string, price float64, likes int) {
+	conn, err := redis.Dial("tcp", "localhost:8080",
+		redis.DialPassword(os.Getenv("PASSWORD")))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err1 := conn.Do("HMSET", "album:", "title", title, "artist", artist, "price", price, "likes", likes)
+	if err1 != nil {
+		log.Fatal(err)
+	}
+
+	defer conn.Close()
+
 }

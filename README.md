@@ -14,6 +14,7 @@ OK
 
 ```
 
+# Docker-compose
 
 ```
 
@@ -29,7 +30,15 @@ services:
 
 ```
 
+# Conexión y comandos básicos
 ```
+conn, err := redis.Dial("tcp", "localhost:8080",
+		redis.DialPassword(os.Getenv("PASSWORD")))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+
 conn.Do("HMSET", "album:3", "title", "TESTS", "artist", "Jimi Hendrix", "price", 4.95, "likes", 8)
 
 conn.Do("HMSET", "album:2", "title", "Electric Ladyland", "artist", "Jimi Hendrix", "price", 4.95, "likes", 8)
@@ -49,3 +58,15 @@ fmt.Printf("%+v", album)
 
 
 ```
+
+# Postman
+- Method: POST
+- Body -> raw
+```
+
+{"title": "ricardo", "artist": "arturo", "price": 5.90, "likes": 9}
+
+```
+
+# Para countd
+https://redis.io/commands/incr/
