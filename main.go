@@ -31,7 +31,7 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/album", showAlbum)
+	mux.HandleFunc("/album/", showAlbum)
 	log.Println("Listening on :4000...")
 	http.ListenAndServe(":4000", mux)
 }
