@@ -70,3 +70,10 @@ fmt.Printf("%+v", album)
 
 # Para countd
 https://redis.io/commands/incr/
+
+
+# Construir dockerfile
+
+docker build . -t go_redis_app
+
+docker run -p 4000:4000 go_redis_app
