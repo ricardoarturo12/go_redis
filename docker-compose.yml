@@ -6,10 +6,10 @@ services:
         - "6379:6379"
     command: redis-server --requirepass ${PASSWORD}
 
-  app:
-    image: "app:1.0"
-    build: .
-    depends_on:
-      - redis_db
-    ports:
-        - "4000:4000"
+  # app:
+  #   image: "app:1.0"
+  #   build: .
+  #   depends_on:
+  #     - redis_db
+  #   ports:
+  #       - "4000:4000"

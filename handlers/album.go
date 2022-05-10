@@ -43,6 +43,15 @@ func ShowAlbum(serv *server.Server) http.HandlerFunc {
 			return
 		}
 
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(models.Album{
+			Title:  bk.Title,
+			Artist: bk.Artist,
+			Price:  bk.Price,
+			Likes:  bk.Likes,
+		})
+
 		fmt.Fprintf(w, "%s by %s: £%.2f [%d likes] \n", bk.Title, bk.Artist, bk.Price, bk.Likes)
 
 	}
@@ -56,17 +65,23 @@ func SetAlbum(serv *server.Server) http.HandlerFunc {
 			return
 		}
 		decoder := json.NewDecoder(r.Body)
+
 		var data models.Album
 		err := decoder.Decode(&data)
 		if err != nil {
 			panic(err)
 		}
 
-		// value, _ := Increment(serv.GetConnect())
-		// // convertir una interface a string
-		// value1 := fmt.Sprintf("%v", value)
-		fmt.Println("aca ingresa")
-		// setAlbums(serv.GetConnect(), value1, data.Title, data.Artist, data.Price, data.Likes)
+		value, _ := Increment(serv.GetConnect())
+		// convertir una interface a string
+		value1 := fmt.Sprintf("%v", value)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(models.MessageResponse{
+			Message: "Correcto",
+			Status:  true,
+		})
+		setAlbums(serv.GetConnect(), value1, data.Title, data.Artist, data.Price, data.Likes)
 	}
 }
 
@@ -103,7 +118,9 @@ func Increment(conn redis.Conn) (interface{}, error) {
 
 func setAlbums(conn redis.Conn, id, title, artist string, price float64, likes int) {
 
-	_, err1 := conn.Do("HMSET", "album:", "title", title, "artist", artist, "price", price, "likes", likes)
+	album := "album:" + id
+
+	_, err1 := conn.Do("HMSET", album, "title", title, "artist", artist, "price", price, "likes", likes)
 	if err1 != nil {
 		log.Fatal(err1)
 	}
