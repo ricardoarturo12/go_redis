@@ -52,7 +52,7 @@ func ShowAlbum(serv *server.Server) http.HandlerFunc {
 			Likes:  bk.Likes,
 		})
 
-		fmt.Fprintf(w, "%s by %s: £%.2f [%d likes] \n", bk.Title, bk.Artist, bk.Price, bk.Likes)
+		// fmt.Fprintf(w, "%s by %s: £%.2f [%d likes] \n", bk.Title, bk.Artist, bk.Price, bk.Likes)
 
 	}
 }
