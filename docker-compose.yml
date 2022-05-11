@@ -2,14 +2,27 @@ version: "3.8"
 services:
   redis_db:
     image: "redis:alpine"
-    ports:
-        - "6379:6379"
+    # hostname: redis
+    # environment:
+    #   - ALLOW_EMPTY_PASSWORD=yes
     command: redis-server --requirepass ${PASSWORD}
+    ports:
+      - "6379:6379"
+    networks:
+      - fullstack
 
-  # app:
-  #   image: "app:1.0"
-  #   build: .
-  #   depends_on:
-  #     - redis_db
-  #   ports:
-  #       - "4000:4000"
+  app:
+    image: "app:1.0"
+    build: .
+    depends_on:
+      - redis_db
+    restart: on-failure
+    ports:
+      - "4000:4000"
+    networks:
+      - fullstack
+
+
+networks:
+  fullstack:
+    driver: bridge

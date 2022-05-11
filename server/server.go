@@ -26,7 +26,7 @@ func NewServer() *Server {
 			MaxActive:   12000,
 			IdleTimeout: 240 * time.Second,
 			Dial: func() (redis.Conn, error) {
-				return redis.Dial("tcp", "localhost:6379",
+				return redis.Dial("tcp", "redis_db:6379",
 					redis.DialPassword(os.Getenv("PASSWORD")))
 			},
 		},
@@ -35,6 +35,6 @@ func NewServer() *Server {
 }
 
 func (server *Server) GetConnect() redis.Conn {
-	fmt.Println("obtiene getconnect")
+	// fmt.Println("obtiene getconnect")
 	return server.pool.Get()
 }
