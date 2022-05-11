@@ -101,7 +101,7 @@ func findAlbum(conn redis.Conn, id string) (*models.Album, error) {
 		return nil, err1
 	}
 
-	log.Println(&album)
+	// log.Println(&album)
 	return &album, nil
 }
 
